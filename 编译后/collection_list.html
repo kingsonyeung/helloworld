@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的收藏 - ${site.name}</title>
+<link rel="stylesheet" type="text/css" href="/${res}/css/index.css" />
+<script type="text/javascript" src="/${res}/js/jquery-1.11.1.min.js"></script>
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script language="javascript" type="text/javascript">
+function optDelete(type,cid,pageNo)
+{
+if (confirm("是否删除该收藏？"))  {  
+location.href="${base}/member/collect_cancel.jspx?cIds="+cid+"&pageNo="+pageNo
+
++"&type="+type;
+}  else  { 
+return false;
+};
+};
+</script>
+</head>
+
+<body style="background-color:#f5f5f5;">
+[#include "../include/header.html"]
+<div class="container clearfix" style="padding-bottom:0;">
+<table border="0" cellpadding="0" cellspacing="0" style="margin:20px 0 40px;"><tbody><tr>
+<td bgcolor="#fff" valign="top">
+  <div class="userLeft">
+    <div class="top">
+      <img src="${user.avatar!}">
+      <p class="username">${user.nickname!}</p>
+      <p class="useradd">广州市 /省实附中/ 初一/ 3班</p>
+      <p class="useradd userteacher">班主任/吴友仁</p>
+    </div>
+    <div class="lan"><span>哪里有什么天才，我只是将人家喝咖啡的时间都花在了读书上。</span><p>——鲁迅<i></i></p></div>
+    <div class="userList">
+      <ul>
+        <li><a href="${base}/member/index.jspx">个人中心</a></li>
+        <li><a href="${base}/member/subscription_list.jspx">我的订阅</a></li>
+        <li class="on"><a href="${base}/member/collection_list.jspx">我的收藏</a></li>
+        <li><a href="${base}/member/test_list.jspx">我的测评</a></li>
+        <li><a>安全设置</a></li>
+      </ul>
+    </div>
+  </div> 
+</td>
+<td width="20"></td>
+<td bgcolor="#fff" width="805" valign="top">
+  <div class="usermain clearfix">
+    <div class="sc-time">
+      <a href="${base}/member/collection_list.jspx" [#if !type??]class="on"[/#if]>所有</a><a href="${base}/member/collection_list.jspx?type=week" [#if type??&&type=="week"]class="on"[/#if]>最近一周</a><a href="${base}/member/collection_list.jspx?type=month" [#if type??&&type=="month"]class="on"[/#if]>一个月</a><a href="${base}/member/collection_list.jspx?type=three" [#if type??&&type=="three"]class="on"[/#if]>三个月</a><a href="${base}/member/collection_list.jspx?type=six" [#if type??&&type=="six"]class="on"[/#if]>半年</a><a class="new">最新收藏<em>${count!0}</em></a>
+    </div>
+    [#if pagination.list?size gt 0]
+    <form id="tableForm" action="collection_list.jspx" method="post">
+    <table cellpadding="0" cellspacing="0" class="scList">
+      <tbody>
+        <tr bgcolor="#eeeff0">
+          <td width="8%" style="text-align:center; font-size:14px;">序号</td>
+          <td width="35%" style="text-align:center; font-size:14px;">收藏项目</td>
+          <td width="25%" style="text-align:center; font-size:14px;">所属栏目</td>
+          <td width="22%" style="text-align:center; font-size:14px;">收藏时间</td>
+          <td width="10%" style="text-align:center; font-size:14px;">操作</td>
+        </tr>
+       [#list pagination.list as c]
+        <tr id="tr_${c.id}" [#if (c_index+1)%2!=0]bgcolor="#fff"[#else]bgcolor="#f8f9fa"[/#if]>
+          <td>${c_index+1}</td>
+          <td><a class="project" target="_blank" href="${c.content.url!}">${c.content.title?html}[#if count gt c_index]<i></i>[/#if]</a></td>
+          <td><a>${c.content.channel.name!}</a></td>
+          <td style="text-align:center;">${c.createTime!}</td>
+          <td style="text-align:center;"><input onclick="optDelete('${type!}','${c.content.id}','${pagination.pageNo}');" type="button" value="删除" class="del"></td>
+        </tr>
+        [/#list]
+      </tbody>
+    </table>
+    <script type="text/javascript">
+            function _gotoPage(pageNo) {
+                try{
+                    var tableForm = document.getElementById("tableForm");
+                    $("input[name=pageNo]").val(pageNo);
+                    tableForm.action="collection_list.jspx";
+                    tableForm.onsubmit=null;
+                    tableForm.submit();
+                } catch(e) {
+                    alert('_gotoPage(pageNo)方法出错');
+                }
+            }
+            </script>
+            [#else]
+                
+         </form>
+            [/#if]         
+  </div>  
+</td>
+</tr></tbody></table>  
+</div>
+[#include "../include/about.html"]
+[#include "../include/footer.html"]
+</body>
+</html>

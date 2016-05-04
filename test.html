@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>逻辑思维测试</title>
+<script src="res/common/js/jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+	function beforeSubmit(type){		
+		//alert(type);
+		var answer = $('input:radio[name="testAnswer"]:checked').val();
+				
+		if (answer == null || answer == "") {
+			alert("请至少选择一个答案!");
+			return;
+		}
+		$("#haction").val(type);
+		$("#test_form").submit();
+	}
+</script>
+</head>
+<body>
+<form id="test_form" action="lttest.jhtml" method="post">
+<h3>进度:${progress}</h3>
+<table width="80%">
+	<tr>
+		<td colspan="2">${testQuestion.questionSubject}</td>
+	</tr>
+	<tr>
+		<td colspan="2"><div><#if testQuestion.questionContent??>${testQuestion.questionContent}</#if></div></td>
+	</tr>
+	<#if testQuestion.questionImg??>
+	<tr>
+		<td colspan="2"><div><img src="res/uploadImg/${testQuestion.questionImg}" /></div></div></td>
+	</tr>
+	</#if>
+	<#list testQuestion.jcLtQuestionAnswers as answer>
+	<tr>
+		<#if answer.answerImg??>
+		<td><input type="radio" name="testAnswer" id='testAnswer${answer.seq}' <#if answer.sid == selectAnswer>checked="checked"</#if> value="${answer.sid}"/></td>
+		<td>${answer.answerOption}&nbsp;<div><img for="testAnswer${answer.seq}" src="res/uploadImg/${answer.answerImg}" /></div></td>
+		<#else>
+		<td><input type="radio" name="testAnswer" id='testAnswer${answer.seq}' <#if answer.sid == selectAnswer>checked="checked"</#if> value="${answer.sid}"/></td>
+		<td><label for="testAnswer${answer.seq}">${answer.answerOption}&nbsp;${answer.answerContent}</label></td>
+		</#if>
+	</tr>
+	</#list>
+</table>
+<br />
+
+<input type="button" value="返回上一题" onclick="beforeSubmit('pre');" <#if firstmark == "y">disabled="disabled"</#if> />&nbsp;
+<#if lastmark == "y">
+<input type="button" value="完成测试" onclick="beforeSubmit('end');" />
+<#else>
+<input type="button" value="进入下一题" onclick="beforeSubmit('next');" />
+</#if>
+<input type="hidden" name="haction" id="haction" value="next" />
+<input type="hidden" name="ids" id="ids" value="${ids}" />
+<input type="hidden" name="currentId" id="currentId" value="${testsId}" />
+<input type="hidden" name="markTime" id="markTime" value="${testsId}" />
+</form>
+</body>
+</html>
